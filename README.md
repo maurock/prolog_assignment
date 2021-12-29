@@ -1,1 +1,7 @@
-# prolog_assignment
+# Prolexa
+Mauro Comi, Subin Park
+
+```
+
+```
+
