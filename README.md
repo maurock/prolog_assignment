@@ -69,10 +69,10 @@ prove_rb(not B,Rulebase,P0,P):-
 Given the query "is pixie a teacher", Prolexa converts it into `query(teacher(pixie))`. The rule `prove_rb/4` implemented above first looks for a clause that satisfies the rule `teacher(X):-B`. Since this does not exist, Prolexa runs the method `prove_rb(not(Query), Rulebase)` inside `prove_question/3`.  Therefore, `not(Query)=not(teacher(pixie)`. Then, Prolexa runs the method `prove_rb(not B,Rulebase,P0,P)` shown above and instantiates `B=teacher(pixie)`. The goal is to find a clause in the form `A:-teacher(pixie)`, which succeeds and returns `A=happy(X)`. Finally, Prolexa runs the line `prove_rb(not A,Rulebase,[p(not B,Rule)|P0],P)` and succeeds, returning the rule `happy(X):-true`. Therefore, Prolexa is able to answer the query "is pixie a teacher". 
 ```
 prolexa> "is pixie a teacher".
-*** utterance(is donald a teacher)
-*** query(teacher(donald))
-*** answer(donald is not teacher)
-donald is not teacher
+*** utterance(is pixie a teacher)
+*** query(teacher(pixie))
+*** answer(pixie is not teacher)
+pixie is not teacher
 ```
 The same rules explained above are also used by Prolexa to explain why pixie is not a teacher:
 ```
