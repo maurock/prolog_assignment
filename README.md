@@ -83,3 +83,78 @@ prolexa> "explain why pixie is not a teacher".
 pixie is not happy; every teacher is happy; therefore pixie is not teacher
 ```
 The method we have just implemented is the *modus tollens* deductive argument: `If P then Q. Not Q. Therefore not P.` Applying this argument to our specific case, we obtain: `If teacher(X), then happy(X). Not happy(X). Therefore, not teacher(X)`.
+
+## Existential quantification
+Prolexa can handle another type of reasoning called existential quantification rather limitedly than universal quantification. We are trying to handle the following logic:
+> Some humans are innovative. Innovators are creative. Therefore, some humans are creative.
+
+The default prolexa can handle determiners such as "all" and "every", but to process "some", we need to add either of grammar rules:
+```
+determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2:-true)]) --> [some].
+```
+```
+determiner(p, sk=>H1, sk=>H2, [(H1,H2):-true]) --> [some].
+```
+Then, Prolexa understands that 'some' humans are innovative, not 'all' humans. First of all, rules about innovative humans and their creativity are added as:
+```
+prolexa> "some humans are innovative".
+*** utterance(some humans are innovative)
+*** rule([(human(sk):-true),(innovative(sk):-true)])
+*** answer(I will remember that some humans are innovative)
+I will remember that some humans are innovative
+prolexa> "innovators are creative".
+*** utterance(innovators are creative)
+*** rule([(creative(_49934):-innovative(_49934))])
+*** answer(I will remember that innovators are creative)
+I will remember that innovators are creative
+```
+Therefore, Prolexa knows that some humans are innovative and all innovative humans are creative. Then, we handle two humans one of which is innovative and the other is not. 
+```
+prolexa> "donald is a human".
+*** utterance(donald is a human)
+*** rule([(human(donald):-true)])
+*** answer(I will remember that donald is a human)
+I will remember that donald is a human
+prolexa> "donald is innovative".
+*** utterance(donald is innovative)
+*** rule([(innovative(donald):-true)])
+*** answer(I will remember that donald is innovative)
+I will remember that donald is innovative
+prolexa> "is donald creative".
+*** utterance(is donald creative)
+*** query(creative(donald))
+*** answer(donald is creative)
+donald is creative
+prolexa> "explain why donald is creative".
+*** utterance(explain why donald is creative)
+*** goal(explain_question(creative(donald),_55216,_55204))
+*** answer(donald is innovative; every innovator is creative; therefore donald is creative)
+donald is innovative; every innovator is creative; therefore donald is creative
+```
+Prolexa clearly understands why donald is creative. On the other hand, Prolexa cannot guarantee that a human who is not known to be innovative is creative.
+```
+prolexa> "pete is a human".
+*** utterance(pete is a human)
+*** rule([(human(pete):-true)])
+*** answer(I will remember that pete is a human)
+I will remember that pete is a human
+prolexa> "is pete innovative".
+*** utterance(is pete innovative)
+*** query(innovative(pete))
+*** answer(Sorry, I don't think this is the case)
+Sorry, I don't think this is the case
+```
+However, even though a new rule is added, so we know that pete is not innovative, Prolexa still cannot conclude that pete is not creative. 
+```
+prolexa> "pete is not innovative".
+*** utterance(pete is not innovative)
+*** rule([(not(innovative(pete)):-true)])
+*** answer(I will remember that pete is not innovative)
+I will remember that pete is not innovative
+prolexa> "is pete creative".
+*** utterance(is pete creative)
+*** query(creative(pete))
+*** answer(Sorry, I don't think this is the case)
+Sorry, I don't think this is the case
+```
+Finally, Prolexa cannot confirm which humans are creative only given that some humans are creative despite added rules.
