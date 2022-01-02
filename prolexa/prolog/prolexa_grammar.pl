@@ -30,6 +30,8 @@ pred(sparrow, 1,[n/sparrow]).
 pred(fly,     1,[v/fly]).
 pred(happy,     1,[a/happy,n/happy]).
 pred(teacher, 1 ,[a/teacher,n/teacher]).
+pred(innovative,1,[a/innovative,n/innovator]).
+pred(creative,1,[a/creative,n/creator]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -69,7 +71,6 @@ verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 
 neg_verb_phrase(s,M) --> [is,not],property(s,M).
-%determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2 :- true)]) -->[some].
 
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
@@ -77,12 +78,14 @@ property(s,M) --> [a],noun(s,M).
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
 determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
 %determiner(p,X=>B,X=>H,[(H:-B)]) --> [].
-%determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2 :- true)]) -->[some].
+determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2:-true)]) --> [some].
+determiner(p, sk=>H1, sk=>H2, [(H1,H2):-true]) --> [some].
 
 proper_noun(s,tweety) --> [tweety].
 proper_noun(s,peter) --> [peter].
 proper_noun(s,donald) --> [donald].
 proper_noun(s,pixie) --> [pixie].
+proper_noun(s,pete) --> [pete].
 
 %%% questions %%%
 
@@ -98,8 +101,7 @@ question1(Q) --> [is], proper_noun(N,X),property(N,X=>Q).
 %question1(not(Q)) --> [is], proper_noun(N,X),[not],property(N,X=>Q).
 
 question1(Q) --> [does],proper_noun(_,X),verb_phrase(_,X=>Q).
-%question1((Q1,Q2)) --> [are,some],noun(p,sk=>Q1),
-%					  property(p,sk=>Q2).
+question1((Q1,Q2)) --> [are,some],noun(p,sk=>Q1),property(p,sk=>Q2).
 
 
 %%% commands %%%
